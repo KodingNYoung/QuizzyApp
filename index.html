@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   
+    <link rel="stylesheet" href="./css/style.css">
+    <title>Quiz App</title>
+</head>
+<body>
+    <div class="front-page page">
+        <div class="spinner">
+          <img src="./gifs/Interwind-1s-200px.svg" alt="">
+        </div>
+        <h1 class="heading">
+            <span class="first-line">Quizzy</span>
+            <span class="second-line">App</span>
+        </h1>
+        <div class="error-toast">
+          couldn't get questions
+        </div>
+        <form class="input-area" id="quiz-form" autocomplete="off">
+          <input type="text" name="name" id="name" class="value-input" placeholder="Enter your name..." required>
+          <select name="category" id="category" class="value-input">
+            <option value="">Question category</option>
+
+          </select>
+          <select name="difficulty" id="difficulty" class="value-input">
+            <option value="">Difficulty</option>
+            <option value="easy">Easy</option>
+            <option value="medium">Medium</option>
+            <option value="hard">Hard</option>
+          </select>
+          <input type="number" name="amount" id="amount" placeholder="Number of question" class="value-input" min="5" max="20" required>
+          <button id="start-btn" type="submit" >Start Quiz</button>
+        </form>
+        <p class="instruction">
+          Can you beat the best score? 
+        </p>
+    </div>
+
+    <div class="quiz-container page" id="quiz-container">
+        <div class="score-bar">
+            <button type="submit" id="quit-btn" class="quit-btn">Quit quiz</button>
+            <span class="score">
+                <span class="text">score: </span>
+                <span id="score-num"></span>
+            </span>
+        </div>
+        <div class="question-bar">
+            question <span class="questions"></span>/ <span class="question-length"></span> :
+        </div>
+
+        <div class="question-text-container">
+            <p id="instructions"></p>
+            <p class="text" id="question-text"></p>
+        </div>
+        <div class="options">
+            <div class="option">
+                <input type="radio" name="option" id="option1" value="option1">
+                <label for="option1" class="option-value"></label>
+            </div>
+            <div class="option">
+                <input type="radio" name="option" id="option1" value="option1">
+                <label for="option1" class="option-value"></label>
+            </div>
+            <div class="option">
+                <input type="radio" name="option" id="option1" value="option1">
+                <label for="option1" class="option-value"></label>
+            </div>
+            <div class="option">
+                <input type="radio" name="option" id="option1" value="option1">
+                <label for="option1" class="option-value"></label>
+            </div>
+        </div>
+
+        <div class="question-btn-container">
+            <button class="question-btn" id="submit-btn">Submit quiz</button>
+            <button class="question-btn" id="next-btn">Next question</button>
+        </div>
+    </div>
+
+    <div class="result-page">
+        <div class="result-modal">
+            <div class="modal-name"> <span class="username"></span>,</div>
+            <div class="img-container">
+                <img src="./gifs/source.gif">
+            </div>
+            <div class="modal-score">You scored <span class="userscore"></span></div>
+            <div class="modal-comment">
+                You attempted <span class="quiz-number"></span>  out of <span class="question-length"></span>, you got <span class="quiz-score"></span> correct.</div>
+            <button>Restart quiz</button>
+        </div>
+    </div>
+    <script src="./js/objects.js"></script>
+    <script src="./js/script.js"></script>
+</body>
+</html>
