@@ -201,7 +201,7 @@ const loadToDOM = (questionOBJ) => {
   quizNumber++;
 
   // get UI elements
-  const categoryUI = document.querySelector("#instructions") ;
+  const categoryUI = document.querySelector("#categoryUI") ;
   const questionUI = document.querySelector("#question-text");
   const optionsUI = document.querySelectorAll(".option");
   const quizNumberUI = document.querySelector(".questions");
@@ -268,34 +268,48 @@ const resetColors = () => {
 
     })
 }
+
+const processAnswer = action => {
+  // get the all the options div, save the checked on and the correct one
+  let checkedOption, correctOption;
+
+  const optionsUI = document.querySelectorAll(".option");
+
+  // loop through all the options and get the checked and correct one.
+  optionsUI.forEach((optionUI) => {
+      if (optionUI.children[0].value === "1") {
+          correctOption = optionUI;
+      } 
+      if(optionUI.children[0].checked === true) {
+          checkedOption = optionUI;
+      }
+  })
+  
+  if (action === 'check') {
+    checkAnswer(checkedOption, correctOption);
+  }else {
+    calculateScoreAndUpdate(checkedOption, correctOption);
+  }
+}
+
 // calculate score and update it to the participant
-const calculateScoreAndUpdate = () => {
-    // get the all the options div, save the checked on and the correct one
-    let checkedOption, correctOption;
+const calculateScoreAndUpdate = (checkedOption, correctOption) => {
+  // if the checked on is equal to the correct on increase score
+  // if not background color = red;
+  if (checkedOption === correctOption){
+    participant.score += 1;
+  }else {
+    participant.score += 0;    
+  }
+}
 
-    const optionsUI = document.querySelectorAll(".option");
-
-    // loop through all the options and get the checked and correct one.
-    optionsUI.forEach((optionUI) => {
-        if (optionUI.children[0].value === "1") {
-            correctOption = optionUI;
-        } 
-        if(optionUI.children[0].checked === true) {
-            checkedOption = optionUI;
-        }
-    })
-    
-    // if the checked on is equal to the correct on increase score
-    // if not background color = red;
-    if (checkedOption === correctOption){
-        participant.score += 1;
-    }else if(!checkedOption){
-        participant.score += 0;
-    }else {
-        participant.score += 0;
-        checkedOption.children[1].classList.add("red");
-    }
-    correctOption.children[1].classList.add("green");
+const checkAnswer = (checkedOption, correctOption) => {
+  // if the checked on is equal to the correct on increase score
+  // if not background color = red;
+  if (!(checkedOption === correctOption) && checkedOption){
+    checkedOption.children[1].classList.add("red");
+  }
+  correctOption.children[1].classList.add("green");
 }
 // show result modal
 const showResultModal = () => {
@@ -353,7 +367,7 @@ const handleQuizAction = (e) => {
         // if its a quit button return to start up page
         location.reload();
     }else if(e.target.id === "submit-btn"){
-        calculateScoreAndUpdate();
+        processAnswer('submit');
 
         // load score to DOM
         loadUser(participant);
@@ -364,11 +378,13 @@ const handleQuizAction = (e) => {
         // show result modal
         setTimeout(showResultModal, 500);
         
+    }else if (e.target.id === "check-answer-btn") {
+      // checkAnswer()
+      processAnswer('check');
     }else if(e.target.id === "next-btn"){
-        calculateScoreAndUpdate();
-
+        // calculateScoreAndUpdate();
+        processAnswer('next');
         setTimeout(loadNextQuiz, 500);
-
     }
 }
 

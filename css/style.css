@@ -64,7 +64,6 @@ body{
 }
 .front-page .heading{
     height: 50vh;
-    /* border: 1px solid white; */
     max-width: 250px;
     min-width: 250px;
     width: 80%;
@@ -83,7 +82,6 @@ body{
     align-self: flex-end;
 }
 .input-area{
-    /* border: 1px solid white; */
     width: 70%;
     max-width: 450px;
     text-align: center;
@@ -117,7 +115,7 @@ body{
 .input-area button:active{
     background-color:rgba(24, 24, 185, 0.603) ;
 }
-.instruction{
+.front-page .instruction{
     width:80%;
     font-size: 17px;
     font-family: 'Nunito', sans-serif;
@@ -178,7 +176,7 @@ body{
 }
 .question-text-container{
     width: 90vw;
-    height: 35vh;
+    height: 30vh;
     display: flex;
     flex-direction: column;
     justify-content: space-around;
