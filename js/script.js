@@ -290,6 +290,12 @@ const processAnswer = action => {
   }else {
     calculateScoreAndUpdate(checkedOption, correctOption);
   }
+
+  // disable the radio buttons
+  optionsUI.forEach(option => {
+    // console.log(option)
+    option.querySelector('.radio-option').disabled = true;
+  })
 }
 
 // calculate score and update it to the participant
@@ -360,8 +366,12 @@ const handleQuizAction = (e) => {
         // tick that option
         e.target.children[0].checked = true;
 
-        // add a class of selected to the label of selected one
-        e.target.children[1].classList.add("selected");
+        // // run through all the option and select the one that was click
+        // document.querySelectorAll('.option').forEach(option => {
+        //   if (option.children[0].checked) {
+        //     option.children[1].classList.add('selected');
+        //   }
+        // })
 
     }else if (e.target.id === "quit-btn"){
         // if its a quit button return to start up page
