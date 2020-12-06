@@ -103,14 +103,14 @@ const handleQuizStart = e => {
       throw new Error(RESPONSE_MESSAGES[data.response_code])
     }
   })
-  .catch( err => {
-    // stop spinner
-    document.querySelector('.spinner').style.display = 'none';
-    // look for ways to display the message
-    showToast(err)
+  // .catch( err => {
+  //   // stop spinner
+  //   document.querySelector('.spinner').style.display = 'none';
+  //   // look for ways to display the message
+  //   showToast(err)
 
-    console.log(err)
-  })
+  //   console.log(err)
+  // })
 
 
   const clearInputs = inputArray => {
@@ -201,10 +201,10 @@ const loadToDOM = (questionOBJ) => {
   quizNumber++;
 
   // get UI elements
-  const categoryUI = document.querySelector("#instructions") ;
+  const categoryUI = document.querySelector("#category") ;
   const questionUI = document.querySelector("#question-text");
   const optionsUI = document.querySelectorAll(".option");
-  const quizNumberUI = document.querySelector(".questions");
+  const quizNumberUI = document.querySelector(".question-count");
   const questionLengthUI = document.querySelector(".question-length");
 
   // load the instruction, question and options to the DOM
