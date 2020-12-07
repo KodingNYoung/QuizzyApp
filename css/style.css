@@ -189,7 +189,7 @@ body{
 }
 .question-count-bar{
   width: fit-content;
-  font-size: 20px;
+  font-size: 1.2rem;
   text-transform: capitalize;
   align-self: flex-start;
   font-family: 'Roboto mono', sans-serif;
@@ -206,10 +206,12 @@ body{
   text-transform: capitalize;
 }
 .question-text-container .question-text{
-  height: 50%;
-  align-self: center;
-  vertical-align: middle;
-  font-size: 1.7rem;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.5rem;
 }
 /* options */
 .options{
@@ -221,6 +223,7 @@ body{
 .option{
   /* box-shadow: 1px 1px 3px 1px rgba(138, 138, 161, 0.295); */
   position: relative;
+  height: 100%;
 }
 .option input {
   position: absolute;
@@ -252,7 +255,7 @@ body{
   color: #fff;
 }
 /* correct and wrong checked option */
-.option.correct input:checked + label {
+.option.correct input + label {
   background-color: #00C07F;
   border-color: #00C07F;
 }
@@ -293,13 +296,15 @@ body{
   background-color: var(--dull);
   /* color:var(--action); */
 }
-
 /* action btn */
 .question-btn-container .action-btn {
   background-color: var(--action);
 }
 .question-btn-container .action-btn:hover{
   background-color:#01013bd7 ;
+}
+.question-btn-container .action-btn.submit-btn {
+  display: none;
 }
 /* RESULT */
 .result-page{

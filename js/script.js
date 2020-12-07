@@ -8,7 +8,7 @@ const restartBtn = document.querySelector(".result-modal button");
 
 // variables
 let quizNumber = 0,
-    questions, questionLength, participant;
+    questions, questionLength, participant, quizMode;
 const categories = {
   'Sports': 21,
   'Video Games': 15,
@@ -69,6 +69,7 @@ const handleQuizStart = e => {
 
   // get the inputted data
   const name = document.getElementById('name');
+  const mode = document.getElementById('quiz-mode');
   const category = document.getElementById('category');
   const difficulty = document.getElementById('difficulty');
   const amountOfQuestion = document.getElementById('amount');
@@ -78,6 +79,9 @@ const handleQuizStart = e => {
 
   // create a participant object
   participant = new Participant(name.value);
+
+  // set the quiz mode 
+  quizMode = mode.value;
 
   // fetch questions
   fetchQuestions(category.value, difficulty.value, amountOfQuestion.value)
@@ -251,8 +255,10 @@ const loadNextQuiz = () => {
     
     //check if it's the last quesion and remove the next button
     if (questions.length === 0){
-        // display the next question btn to be none
-        document.getElementById("next-btn").style.display = "none";
+        // remove the next btn with display none
+        document.getElementById("next-question-btn").style.display = "none";
+        // show the submit btn
+        document.getElementById('submit-quiz-btn').style.display = "inline-flex"
     }
 }
 
@@ -261,9 +267,9 @@ const resetColors = () => {
     const optionsUI = document.querySelectorAll(".option");
     
     optionsUI.forEach((optionUI) => {
-        optionUI.children[1].classList.remove("green");
-        optionUI.children[1].classList.remove("red");
-        optionUI.children[1].classList.remove("selected");
+        optionUI.classList.remove("correct");
+        optionUI.classList.remove("wrong");
+        optionUI.classList.remove("selected");
         optionUI.children[0].checked = false;
 
     })
@@ -275,11 +281,13 @@ const calculateScoreAndUpdate = () => {
 
     const optionsUI = document.querySelectorAll(".option");
 
-    // loop through all the options and get the checked and correct one.
+    // loop through all the options
     optionsUI.forEach((optionUI) => {
+        // getting the correct option
         if (optionUI.children[0].value === "1") {
             correctOption = optionUI;
         } 
+        // getting the checked option
         if(optionUI.children[0].checked === true) {
             checkedOption = optionUI;
         }
@@ -293,9 +301,9 @@ const calculateScoreAndUpdate = () => {
         participant.score += 0;
     }else {
         participant.score += 0;
-        checkedOption.children[1].classList.add("red");
+        checkedOption.classList.add("wrong");
     }
-    correctOption.children[1].classList.add("green");
+    correctOption.classList.add("correct");
 }
 // show result modal
 const showResultModal = () => {
@@ -324,12 +332,12 @@ const designModal = () => {
   if (scorePercentage <= 30) {
     // modalState.scoreColor = "rgb(233, 7, 7)";
     // modalState.gifURL = "./gifs/nawa.gif";
-    modalState = setModalState("rgb(233, 7, 7)", "./gifs/nawa.gif")
+    modalState = setModalState("#FF6562", "./gifs/nawa.gif")
       
   }else if (scorePercentage > 30 && scorePercentage < 80){
-    modalState = setModalState("rgba(1, 1, 59, 0.788)", "./gifs/youtried.gif");
+    modalState = setModalState("#104b68", "./gifs/youtried.gif");
   }else{
-    modalState = setModalState('rgb(0,255,0)','./gifs/source.gif');
+    modalState = setModalState('#00C07F','./gifs/source.gif');
   }
 
   document.querySelector(".userscore").parentElement.style.color = modalState.scoreColor;
@@ -346,13 +354,17 @@ const handleQuizAction = (e) => {
         // tick that option
         e.target.children[0].checked = true;
 
-        // add a class of selected to the label of selected one
-        e.target.children[1].classList.add("selected");
-
+        // loop through the options array and check add a class of "selected" to the option with the checked radio
+        // document.querySelectorAll('.option').forEach(option => {
+        //   const radio = option.querySelector('input');
+        //   if (radio.checked) {
+        //     option.classList.add('selected')
+        //   }
+        // })
     }else if (e.target.id === "quit-btn"){
         // if its a quit button return to start up page
         location.reload();
-    }else if(e.target.id === "submit-btn"){
+    }else if(e.target.id === "submit-quiz-btn"){
         calculateScoreAndUpdate();
 
         // load score to DOM
@@ -364,11 +376,10 @@ const handleQuizAction = (e) => {
         // show result modal
         setTimeout(showResultModal, 500);
         
-    }else if(e.target.id === "next-btn"){
+    }else if(e.target.id === "next-question-btn"){
         calculateScoreAndUpdate();
 
         setTimeout(loadNextQuiz, 500);
-
     }
 }
 
