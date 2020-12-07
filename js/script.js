@@ -8,7 +8,9 @@ const restartBtn = document.querySelector(".result-modal button");
 
 // variables
 let quizNumber = 0,
-    questions, questionLength, participant, quizMode;
+    questions, questionLength, participant, quizMode, timerInterval;
+
+// constant
 const categories = {
   'Sports': 21,
   'Video Games': 15,
@@ -33,6 +35,11 @@ const RESPONSE_MESSAGES = {
   3: 'Session token not found',
   4: 'Session token expired'
 } 
+const timeInSeconds = {
+  easy: 15,
+  medium: 20,
+  hard: 25
+};
 
 // function to load all event listeners
 const loadListener = () => {   
@@ -223,13 +230,16 @@ const loadToDOM = (questionOBJ) => {
   // load options in to the DOM
   optionsUI.forEach((optionUI, index) => {
     if (options[index].answer) {
-      optionUI.children[0].value = 1;
-      optionUI.children[1].innerHTML = options[index].answer;
+      optionUI.querySelector('input').value = 1;
+      optionUI.querySelector('label').innerHTML = options[index].answer;
     }else {
-      optionUI.children[0].value = 0;
-      optionUI.children[1].innerHTML = options[index];
+      optionUI.querySelector('input').value = 0;
+      optionUI.querySelector('label').innerHTML = options[index];
     }
   })
+
+  // start timer
+  startTimer(questionOBJ.difficulty);
 }
 
 const loadUser = (participant) => {
@@ -237,34 +247,34 @@ const loadUser = (participant) => {
 }
 
 const loadNextQuiz = () => {
-    // reset the colors of the options
-    resetColors();
-    
-    // enable all 
-    document.querySelectorAll(".option").forEach((optionUI) => {
-      optionUI.querySelector('input').disabled = false;
-    });
+  // reset the colors of the options
+  resetColors();
+  
+  // enable all 
+  document.querySelectorAll(".option").forEach((optionUI) => {
+    optionUI.querySelector('input').disabled = false;
+  });
 
-    //update score
-    loadUser(participant);
-    
-    //update quiz number, instruction, question, options
-    // get a random number
-    let num = randomNum(questions.length)
+  //update score
+  loadUser(participant);
+  
+  //update quiz number, instruction, question, options
+  // get a random number
+  let num = randomNum(questions.length)
 
 
-    // load question to the DOM
-    loadToDOM(questions[num]);
-    questions.splice(num, 1);
-    
-    
-    //check if it's the last quesion and remove the next button
-    if (questions.length === 0){
-        // remove the next btn with display none
-        document.getElementById("next-question-btn").style.display = "none";
-        // show the submit btn
-        document.getElementById('submit-quiz-btn').style.display = "inline-flex"
-    }
+  // load question to the DOM
+  loadToDOM(questions[num]);
+  questions.splice(num, 1);
+  
+  
+  //check if it's the last quesion and remove the next button
+  if (questions.length === 0){
+      // remove the next btn with display none
+      document.getElementById("next-question-btn").style.display = "none";
+      // show the submit btn
+      document.getElementById('submit-quiz-btn').style.display = "inline-flex"
+  }
 }
 
 // reset the options' colors
@@ -278,6 +288,29 @@ const resetColors = () => {
         optionUI.children[0].checked = false;
 
     })
+}
+
+// start timer
+const startTimer = (difficulty) => {
+  // get timer element
+  const timerUI = document.getElementById('timer-value');
+
+  let time = timeInSeconds[difficulty];
+  // input the value
+  timerUI.textContent = time;
+  // console.log(timeInSeconds, difficulty)
+  // run the timer evry seconds
+  timerInterval = setInterval((() => {
+    if (time < 1) {
+      // show answer
+      processAction('check');
+      return;
+    }
+    // if not reduce time by one
+    time -= 1;
+    // and update it
+    timerUI.textContent = time;
+  }), 1000)
 }
 
 const processAction = action => {
@@ -307,6 +340,9 @@ const processAction = action => {
     // console.log(option)
     option.querySelector('input').disabled = true;
   })
+
+  // stop the timer
+  clearInterval(timerInterval);
 }
 
 // calculate score and update it to the participant
