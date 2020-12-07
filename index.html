@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   
+
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.1/css/all.css" integrity="sha384-vp86vTRFVJgpjF9jiIGPEEqYqlDwgyBgEF109VFjmqGmIY/Y4HV4d3Gp2irVfcrp" crossorigin="anonymous">
     <link rel="stylesheet" href="./css/style.css">
     <title>Quiz App</title>
 </head>
@@ -21,6 +22,11 @@
         </div>
         <form class="input-area" id="quiz-form" autocomplete="off">
           <input type="text" name="name" id="name" class="value-input" placeholder="Enter your name..." required>
+          <select name="quiz-mode" id="quiz-mode" class="quiz-mode value-input">
+            <option value="" hidden>Quiz mode</option>
+            <option value="practice">Practice mode</option>
+            <option value="test">Test mode</option>
+          </select>
           <select name="category" id="category" class="value-input">
             <option value="">Question category</option>
 
@@ -38,54 +44,66 @@
           Can you beat the best score? 
         </p>
     </div>
-
     <div class="quiz-container page" id="quiz-container">
-        <div class="score-bar">
-            <button type="submit" id="quit-btn" class="quit-btn">Quit quiz</button>
-            <span class="score">
-                <span class="text">score: </span>
-                <span id="score-num"></span>
-            </span>
+        <div class="top-bar">
+            <button type="submit" id="quit-btn" class="quit-btn" title="Quit quiz"><i class="fas fa-long-arrow-alt-left"></i></button>
+            <div class="score-bar">
+                <div class="score">
+                  score:
+                  <span id="score-num" class="value">1</span>
+                </div>
+                <div class="timer">
+                  time:
+                  <span class="value">30</span>sec
+                </div>
+            </div>
         </div>
-        <div class="question-bar">
-            question <span class="questions">2 </span>/ <span class="question-length">20</span> :
-        </div>
+        <div class="question-field">
+          <div class="question-count-bar">
+            q<span class="question-count">2</span>/<span class="question-length">15</span>:
+          </div>
 
-        <div class="question-text-container">
-            <p id="categoryUI" class="category">Maths</p>
-            <p class="text" id="question-text">What is 2 + 2</p>
+          <div class="question-text-container">
+              <p id="categoryUI" class="category">computer</p>
+              <p class="question-text" id="question-text">Howva na?</p>
+          </div>
         </div>
         <div class="options">
             <div class="option">
-                <input type="radio" class="radio-option" name="option" id="option1" value="option1" disabled>
-                <label for="option1" class="option-value">3</label>
+                <input type="radio" name="option" id="option1" value="option1">
+                <label for="option1" class="option-value">i dae</label>
             </div>
             <div class="option">
-                <input type="radio" class="radio-option" name="option" id="option2" value="option2">
-                <label for="option2" class="option-value">7</label>
+                <input type="radio" name="option" id="option2" value="option2">
+                <label for="option2" class="option-value">5n</label>
             </div>
             <div class="option">
-                <input type="radio" class="radio-option" name="option" id="option3" value="option3">
-                <label for="option3" class="option-value">6</label>
+                <input type="radio" name="option" id="option3" value="option3">
+                <label for="option3" class="option-value">my geeeeeeee</label>
             </div>
             <div class="option">
-                <input type="radio" class="radio-option" name="option" id="option4" value="option4">
-                <label for="option4" class="option-value">4</label>
+                <input type="radio" name="option" id="option4" value="option4">
+                <label for="option4" class="option-value">wetin sup?</label>
             </div>
         </div>
 
         <div class="question-btn-container">
-          <button class="question-btn" id="submit-btn">Submit quiz</button>  
-          <button class="question-btn" id="check-answer-btn">Check answer</button>
-          <button class="question-btn" id="next-btn">Next question</button>
+            <button class="check-btn" id="check-answer-btn">check
+              <i class="fas fa-eye"></i>
+            </button>
+            
+            <button class="action-btn  submit-btn" id="submit-quiz-btn">Submit
+              <i class="fas fa-paper-plane"></i>
+            </button>
 
-          
+            <button class="action-btn" id="next-question-btn">Next
+              <i class="fas fa-arrow-right"></i>
+            </button>
         </div>
     </div>
-
-    <div class="result-page">
+    <div class="result-page page">
         <div class="result-modal">
-            <div class="modal-name"> <span class="username"></span>,</div>
+            <div class="modal-name"><span class="username"></span>,</div>
             <div class="img-container">
                 <img src="./gifs/source.gif">
             </div>
