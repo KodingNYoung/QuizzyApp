@@ -205,7 +205,7 @@ const loadToDOM = (questionOBJ) => {
   quizNumber++;
 
   // get UI elements
-  const categoryUI = document.querySelector("#category") ;
+  const categoryUI = document.querySelector("#categoryUI") ;
   const questionUI = document.querySelector("#question-text");
   const optionsUI = document.querySelectorAll(".option");
   const quizNumberUI = document.querySelector(".question-count");
@@ -240,6 +240,11 @@ const loadNextQuiz = () => {
     // reset the colors of the options
     resetColors();
     
+    // enable all 
+    document.querySelectorAll(".option").forEach((optionUI) => {
+      optionUI.querySelector('input').disabled = false;
+    });
+
     //update score
     loadUser(participant);
     
@@ -275,7 +280,7 @@ const resetColors = () => {
     })
 }
 
-const processAnswer = action => {
+const processAction = action => {
   // get the all the options div, save the checked on and the correct one
   let checkedOption, correctOption;
 
@@ -300,14 +305,13 @@ const processAnswer = action => {
   // disable the radio buttons
   optionsUI.forEach(option => {
     // console.log(option)
-    option.querySelector('.radio-option').disabled = true;
+    option.querySelector('input').disabled = true;
   })
 }
 
 // calculate score and update it to the participant
 const calculateScoreAndUpdate = (checkedOption, correctOption) => {
   // if the checked on is equal to the correct on increase score
-  // if not background color = red;
   if (checkedOption === correctOption){
     participant.score += 1;
   }else {
@@ -316,20 +320,19 @@ const calculateScoreAndUpdate = (checkedOption, correctOption) => {
 }
 
 const checkAnswer = (checkedOption, correctOption) => {
-  // if the checked on is equal to the correct on increase score
-  // if not background color = red;
+  
   if (!(checkedOption === correctOption) && checkedOption){
-    checkedOption.children[1].classList.add("red");
+    checkedOption.classList.add("wrong");
   }
-  correctOption.children[1].classList.add("green");
+  correctOption.classList.add("correct");
 }
 // show result modal
 const showResultModal = () => {
-    document.querySelector(".result-page").style.display = "flex";
+  document.querySelector(".result-page").style.display = "flex";
 
-        setTimeout(() => {
-            document.querySelector(".result-modal").style.transform = "scale(1)";
-        },100)
+  setTimeout(() => {
+    document.querySelector(".result-modal").style.transform = "scale(1)";
+  },100)
 }
 
 // design modal
@@ -348,8 +351,6 @@ const designModal = () => {
 
   // add colors and required gifs
   if (scorePercentage <= 30) {
-    // modalState.scoreColor = "rgb(233, 7, 7)";
-    // modalState.gifURL = "./gifs/nawa.gif";
     modalState = setModalState("#FF6562", "./gifs/nawa.gif")
       
   }else if (scorePercentage > 30 && scorePercentage < 80){
@@ -371,39 +372,30 @@ const handleQuizAction = (e) => {
     if (e.target.className === "option"){
         // tick that option
         e.target.children[0].checked = true;
-
-        // loop through the options array and check add a class of "selected" to the option with the checked radio
-        // document.querySelectorAll('.option').forEach(option => {
-        //   const radio = option.querySelector('input');
-        //   if (radio.checked) {
-        //     option.classList.add('selected')
-        //   }
-        // })
     }else if (e.target.id === "quit-btn"){
         // if its a quit button return to start up page
         location.reload();
     }else if(e.target.id === "submit-quiz-btn"){
-        calculateScoreAndUpdate();
+      processAction('submit');
+      // load score to DOM
+      loadUser(participant);
+      
+      // design modal
+      designModal();
 
-        // load score to DOM
-        loadUser(participant);
-        
-        // design modal
-        designModal();
-
-        // show result modal
-        setTimeout(showResultModal, 500);
-        
+      // show result modal
+      setTimeout(showResultModal, 500);
     }else if(e.target.id === "next-question-btn"){
-        calculateScoreAndUpdate();
+        processAction('next')
 
         setTimeout(loadNextQuiz, 500);
+    }else if (e.target.id === "check-answer-btn") {
+      processAction('check')
     }
 }
 
 const goToLandingPage = () => {
     // close modal
-    
     document.querySelector(".result-modal").style.transform = "scale(0)";
     setTimeout(() => {
         location.reload();        
