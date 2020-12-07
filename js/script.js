@@ -8,7 +8,9 @@ const restartBtn = document.querySelector(".result-modal button");
 
 // variables
 let quizNumber = 0,
-    questions, questionLength, participant, quizMode;
+    questions, questionLength, participant, quizMode, timerInterval;
+
+// constant
 const categories = {
   'Sports': 21,
   'Video Games': 15,
@@ -33,6 +35,11 @@ const RESPONSE_MESSAGES = {
   3: 'Session token not found',
   4: 'Session token expired'
 } 
+const timeInSeconds = {
+  easy: 15,
+  medium: 20,
+  hard: 25
+};
 
 // function to load all event listeners
 const loadListener = () => {   
@@ -205,7 +212,7 @@ const loadToDOM = (questionOBJ) => {
   quizNumber++;
 
   // get UI elements
-  const categoryUI = document.querySelector("#category") ;
+  const categoryUI = document.querySelector("#categoryUI") ;
   const questionUI = document.querySelector("#question-text");
   const optionsUI = document.querySelectorAll(".option");
   const quizNumberUI = document.querySelector(".question-count");
@@ -223,13 +230,16 @@ const loadToDOM = (questionOBJ) => {
   // load options in to the DOM
   optionsUI.forEach((optionUI, index) => {
     if (options[index].answer) {
-      optionUI.children[0].value = 1;
-      optionUI.children[1].innerHTML = options[index].answer;
+      optionUI.querySelector('input').value = 1;
+      optionUI.querySelector('label').innerHTML = options[index].answer;
     }else {
-      optionUI.children[0].value = 0;
-      optionUI.children[1].innerHTML = options[index];
+      optionUI.querySelector('input').value = 0;
+      optionUI.querySelector('label').innerHTML = options[index];
     }
   })
+
+  // start timer
+  startTimer(questionOBJ.difficulty);
 }
 
 const loadUser = (participant) => {
@@ -237,29 +247,34 @@ const loadUser = (participant) => {
 }
 
 const loadNextQuiz = () => {
-    // reset the colors of the options
-    resetColors();
-    
-    //update score
-    loadUser(participant);
-    
-    //update quiz number, instruction, question, options
-    // get a random number
-    let num = randomNum(questions.length)
+  // reset the colors of the options
+  resetColors();
+  
+  // enable all 
+  document.querySelectorAll(".option").forEach((optionUI) => {
+    optionUI.querySelector('input').disabled = false;
+  });
+
+  //update score
+  loadUser(participant);
+  
+  //update quiz number, instruction, question, options
+  // get a random number
+  let num = randomNum(questions.length)
 
 
-    // load question to the DOM
-    loadToDOM(questions[num]);
-    questions.splice(num, 1);
-    
-    
-    //check if it's the last quesion and remove the next button
-    if (questions.length === 0){
-        // remove the next btn with display none
-        document.getElementById("next-question-btn").style.display = "none";
-        // show the submit btn
-        document.getElementById('submit-quiz-btn').style.display = "inline-flex"
-    }
+  // load question to the DOM
+  loadToDOM(questions[num]);
+  questions.splice(num, 1);
+  
+  
+  //check if it's the last quesion and remove the next button
+  if (questions.length === 0){
+      // remove the next btn with display none
+      document.getElementById("next-question-btn").style.display = "none";
+      // show the submit btn
+      document.getElementById('submit-quiz-btn').style.display = "inline-flex"
+  }
 }
 
 // reset the options' colors
@@ -274,44 +289,86 @@ const resetColors = () => {
 
     })
 }
-// calculate score and update it to the participant
-const calculateScoreAndUpdate = () => {
-    // get the all the options div, save the checked on and the correct one
-    let checkedOption, correctOption;
 
-    const optionsUI = document.querySelectorAll(".option");
+// start timer
+const startTimer = (difficulty) => {
+  // get timer element
+  const timerUI = document.getElementById('timer-value');
 
-    // loop through all the options
-    optionsUI.forEach((optionUI) => {
-        // getting the correct option
-        if (optionUI.children[0].value === "1") {
-            correctOption = optionUI;
-        } 
-        // getting the checked option
-        if(optionUI.children[0].checked === true) {
-            checkedOption = optionUI;
-        }
-    })
-    
-    // if the checked on is equal to the correct on increase score
-    // if not background color = red;
-    if (checkedOption === correctOption){
-        participant.score += 1;
-    }else if(!checkedOption){
-        participant.score += 0;
-    }else {
-        participant.score += 0;
-        checkedOption.classList.add("wrong");
+  let time = timeInSeconds[difficulty];
+  // input the value
+  timerUI.textContent = time;
+  // console.log(timeInSeconds, difficulty)
+  // run the timer evry seconds
+  timerInterval = setInterval((() => {
+    if (time < 1) {
+      // show answer
+      processAction('check');
+      return;
     }
-    correctOption.classList.add("correct");
+    // if not reduce time by one
+    time -= 1;
+    // and update it
+    timerUI.textContent = time;
+  }), 1000)
+}
+
+const processAction = action => {
+  // get the all the options div, save the checked on and the correct one
+  let checkedOption, correctOption;
+
+  const optionsUI = document.querySelectorAll(".option");
+
+  // loop through all the options and get the checked and correct one.
+  optionsUI.forEach((optionUI) => {
+      if (optionUI.children[0].value === "1") {
+          correctOption = optionUI;
+      } 
+      if(optionUI.children[0].checked === true) {
+          checkedOption = optionUI;
+      }
+  })
+  
+  if (action === 'check') {
+    checkAnswer(checkedOption, correctOption);
+  }else {
+    calculateScoreAndUpdate(checkedOption, correctOption);
+  }
+
+  // disable the radio buttons
+  optionsUI.forEach(option => {
+    // console.log(option)
+    option.querySelector('input').disabled = true;
+  })
+
+  // stop the timer
+  clearInterval(timerInterval);
+}
+
+// calculate score and update it to the participant
+const calculateScoreAndUpdate = (checkedOption, correctOption) => {
+  // if the checked on is equal to the correct on increase score
+  if (checkedOption === correctOption){
+    participant.score += 1;
+  }else {
+    participant.score += 0;    
+  }
+}
+
+const checkAnswer = (checkedOption, correctOption) => {
+  
+  if (!(checkedOption === correctOption) && checkedOption){
+    checkedOption.classList.add("wrong");
+  }
+  correctOption.classList.add("correct");
 }
 // show result modal
 const showResultModal = () => {
-    document.querySelector(".result-page").style.display = "flex";
+  document.querySelector(".result-page").style.display = "flex";
 
-        setTimeout(() => {
-            document.querySelector(".result-modal").style.transform = "scale(1)";
-        },100)
+  setTimeout(() => {
+    document.querySelector(".result-modal").style.transform = "scale(1)";
+  },100)
 }
 
 // design modal
@@ -330,8 +387,6 @@ const designModal = () => {
 
   // add colors and required gifs
   if (scorePercentage <= 30) {
-    // modalState.scoreColor = "rgb(233, 7, 7)";
-    // modalState.gifURL = "./gifs/nawa.gif";
     modalState = setModalState("#FF6562", "./gifs/nawa.gif")
       
   }else if (scorePercentage > 30 && scorePercentage < 80){
@@ -353,39 +408,30 @@ const handleQuizAction = (e) => {
     if (e.target.className === "option"){
         // tick that option
         e.target.children[0].checked = true;
-
-        // loop through the options array and check add a class of "selected" to the option with the checked radio
-        // document.querySelectorAll('.option').forEach(option => {
-        //   const radio = option.querySelector('input');
-        //   if (radio.checked) {
-        //     option.classList.add('selected')
-        //   }
-        // })
     }else if (e.target.id === "quit-btn"){
         // if its a quit button return to start up page
         location.reload();
     }else if(e.target.id === "submit-quiz-btn"){
-        calculateScoreAndUpdate();
+      processAction('submit');
+      // load score to DOM
+      loadUser(participant);
+      
+      // design modal
+      designModal();
 
-        // load score to DOM
-        loadUser(participant);
-        
-        // design modal
-        designModal();
-
-        // show result modal
-        setTimeout(showResultModal, 500);
-        
+      // show result modal
+      setTimeout(showResultModal, 500);
     }else if(e.target.id === "next-question-btn"){
-        calculateScoreAndUpdate();
+        processAction('next')
 
         setTimeout(loadNextQuiz, 500);
+    }else if (e.target.id === "check-answer-btn") {
+      processAction('check')
     }
 }
 
 const goToLandingPage = () => {
     // close modal
-    
     document.querySelector(".result-modal").style.transform = "scale(0)";
     setTimeout(() => {
         location.reload();        
