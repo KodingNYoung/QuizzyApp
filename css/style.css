@@ -10,7 +10,7 @@
     padding: 0;
 }
 body{
-    overflow: hidden;
+    overflow-x: hidden;
     height: 100%;
 }
 .page{
@@ -136,6 +136,7 @@ body{
 
 /* the quiz view */
 .quiz-container{
+  position: absolute;
   transform: translateX(-100%);
   padding: 10px;
   color: white;
