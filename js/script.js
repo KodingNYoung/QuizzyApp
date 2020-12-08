@@ -29,11 +29,11 @@ const categories = {
   'Cartoons': 32,
 };
 const RESPONSE_MESSAGES = {
-  0: 'success',
-  1: 'not enough questions from this category',
-  2: 'Invalid parameter(s), check your input and try again',
-  3: 'Session token not found',
-  4: 'Session token expired'
+  0: { message: 'success' },
+  1: { message: 'not enough questions from this category' },
+  2: { message: 'Invalid parameter(s), check your input and try again' },
+  3: { message: 'Session token not found' },
+  4: { message: 'Session token expired' }
 } 
 const timeInSeconds = {
   easy: 15,
@@ -114,14 +114,14 @@ const handleQuizStart = e => {
       throw new Error(RESPONSE_MESSAGES[data.response_code])
     }
   })
-  // .catch( err => {
-  //   // stop spinner
-  //   document.querySelector('.spinner').style.display = 'none';
-  //   // look for ways to display the message
-  //   showToast(err)
+  .catch( err => {
+    // stop spinner
+    document.querySelector('.spinner').style.display = 'none';
+    // look for ways to display the message
+    showToast(err.message)
 
-  //   console.log(err)
-  // })
+    // console.log(err.message)
+  })
 
 
   const clearInputs = inputArray => {
@@ -223,10 +223,10 @@ const loadToDOM = (questionOBJ) => {
   questionUI.innerHTML = question;
   quizNumberUI.textContent = quizNumber;
   questionLengthUI.textContent = questionLength;
+  
   // to load options
   // first shuffle the options
   options = shuffle(options);
-  
   // load options in to the DOM
   optionsUI.forEach((optionUI, index) => {
     if (options[index].answer) {
@@ -238,8 +238,25 @@ const loadToDOM = (questionOBJ) => {
     }
   })
 
-  // start timer
-  startTimer(questionOBJ.difficulty);
+  // get the check btn
+  const checkBtn = document.getElementById('check-answer-btn');
+  const timerUI = document.querySelector('.timer');
+  // handle quiz mode 
+  console.log(quizMode);
+
+  if (quizMode === "practice") {
+    // show check button
+    checkBtn.style.display = "inline-flex";
+    // hide timer
+    timerUI.style.display = "none";
+  }else {
+    // hide chck btn
+    checkBtn.style.display = "none";
+    // show timer
+    timerUI.style.display = "inline-flex";
+    // start timer
+    startTimer(questionOBJ.difficulty);
+  }
 }
 
 const loadUser = (participant) => {
@@ -298,7 +315,7 @@ const startTimer = (difficulty) => {
   let time = timeInSeconds[difficulty];
   // input the value
   timerUI.textContent = time;
-  // console.log(timeInSeconds, difficulty)
+  
   // run the timer evry seconds
   timerInterval = setInterval((() => {
     if (time < 1) {
@@ -310,6 +327,8 @@ const startTimer = (difficulty) => {
     time -= 1;
     // and update it
     timerUI.textContent = time;
+
+    console.log(time);
   }), 1000)
 }
 
@@ -332,6 +351,7 @@ const processAction = action => {
   if (action === 'check') {
     checkAnswer(checkedOption, correctOption);
   }else {
+    checkAnswer(checkedOption, correctOption);
     calculateScoreAndUpdate(checkedOption, correctOption);
   }
 
