@@ -10,7 +10,7 @@
     padding: 0;
 }
 body{
-    overflow: hidden;
+    overflow-x: hidden;
     height: 100%;
 }
 .page{
@@ -28,7 +28,6 @@ body{
   align-items: center;
   flex-direction: column;
   position: relative;
-  /* display: none; */
   padding: 10% 0 5%;
 }
 .front-page .error-toast {
@@ -137,6 +136,7 @@ body{
 
 /* the quiz view */
 .quiz-container{
+  position: absolute;
   transform: translateX(-100%);
   padding: 10px;
   color: white;
@@ -222,7 +222,6 @@ body{
   margin: 20px 0;
 }
 .option{
-  /* box-shadow: 1px 1px 3px 1px rgba(138, 138, 161, 0.295); */
   position: relative;
   height: 100%;
 }
@@ -267,15 +266,12 @@ body{
 
 /* quiz check and action btns */
 .question-btn-container{
-  /* width: 70%; */
   max-width: 700px;
   margin: 25px auto 0; 
   display: flex;
   justify-content: space-between;
 }
 .question-btn-container button{
-  /* display: block; */
-  /* width: 100%; */
   margin-top: 10px;
   padding: 12px 20px;
   border:  none;
@@ -295,11 +291,11 @@ body{
 /* check btn */
 .question-btn-container .check-btn {
   background-color: var(--dull);
-  /* color:var(--action); */
 }
 /* action btn */
 .question-btn-container .action-btn {
   background-color: var(--action);
+  margin-left: auto;
 }
 .question-btn-container .action-btn:hover{
   background-color:#01013bd7 ;
@@ -307,13 +303,13 @@ body{
 .question-btn-container .action-btn.submit-btn {
   display: none;
 }
+
 /* RESULT */
 .page.result-page{
     display: none;
     justify-content: center;
     align-items: center;
     background: rgba(0,0,0, 0.5);
-    /* display: flex; */
 }
 .result-modal{
     font-family: 'Nunito', sans-serif;

@@ -23,8 +23,7 @@
         <form class="input-area" id="quiz-form" autocomplete="off">
           <input type="text" name="name" id="name" class="value-input" placeholder="Enter your name..." required>
           <select name="quiz-mode" id="quiz-mode" class="quiz-mode value-input">
-            <option value="" hidden>Quiz mode</option>
-            <option value="practice">Practice mode</option>
+            <option value="practice" selected>Practice mode</option>
             <option value="test">Test mode</option>
           </select>
           <select name="category" id="category" class="value-input">
@@ -50,40 +49,40 @@
             <div class="score-bar">
                 <div class="score">
                   score:
-                  <span id="score-num" class="value">1</span>
+                  <span id="score-num" class="value"></span>
                 </div>
                 <div class="timer">
                   time:
-                  <span id="timer-value" class="value">30</span>sec
+                  <span id="timer-value" class="value"></span>sec
                 </div>
             </div>
         </div>
         <div class="question-field">
           <div class="question-count-bar">
-            q<span class="question-count">2</span>/<span class="question-length">15</span>:
+            q<span class="question-count"></span>/<span class="question-length"></span>:
           </div>
 
           <div class="question-text-container">
-              <p id="categoryUI" class="category">computer</p>
-              <p class="question-text" id="question-text">Howva na?</p>
+              <p id="categoryUI" class="category"></p>
+              <p class="question-text" id="question-text"></p>
           </div>
         </div>
         <div class="options">
             <div class="option">
                 <input type="radio" name="option" id="option1" value="option1">
-                <label for="option1" class="option-value">i dae</label>
+                <label for="option1" class="option-value"></label>
             </div>
             <div class="option">
                 <input type="radio" name="option" id="option2" value="option2">
-                <label for="option2" class="option-value">5n</label>
+                <label for="option2" class="option-value"></label>
             </div>
             <div class="option">
                 <input type="radio" name="option" id="option3" value="option3">
-                <label for="option3" class="option-value">my geeeeeeee</label>
+                <label for="option3" class="option-value"></label>
             </div>
             <div class="option">
                 <input type="radio" name="option" id="option4" value="option4">
-                <label for="option4" class="option-value">wetin sup?</label>
+                <label for="option4" class="option-value"></label>
             </div>
         </div>
 
@@ -96,7 +95,7 @@
               <i class="fas fa-paper-plane"></i>
             </button>
 
-            <button class="action-btn" id="next-question-btn">Next
+            <button class="action-btn next-btn" id="next-question-btn">Next
               <i class="fas fa-arrow-right"></i>
             </button>
         </div>
